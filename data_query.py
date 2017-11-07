@@ -1,3 +1,5 @@
+import os
+
 import reader
 
 
@@ -20,6 +22,10 @@ def alter_country_by_languages_JSON(states):
     return new_states
 
 
+def filter_states_without_music(states):
+    return [state for state in states if os.path.exists(reader.TOP_ARTISTS_DIR + state + ".json")]
+
+
 def filter_states_without_language(states, language):
     """ Return list of states without the language as official language """
     states = [state['country'] for state in states]
@@ -27,7 +33,7 @@ def filter_states_without_language(states, language):
 
     return [state for state in states
             if state in states_by_language
-            and language in states_by_language[state]]  # todo: not in
+            and language not in states_by_language[state]]
 
 
 def list_of_nonengland_artist(nonengland_artists, new_artists):
@@ -42,8 +48,7 @@ def connect_artist_and_country(artist_info, artists_country):
     :return:
     """
 
-    if 'area' in artist_info:
-        artists_country[artist_info['name']] = artist_info['area']['name']
+    artists_country[artist_info['name']] = artist_info['area']['name'] if 'area' in artist_info else "Unknown"
 
 
 def alter_top_artists_JSON(states):
@@ -60,5 +65,16 @@ def alter_top_artists_JSON(states):
     return result
 
 
-def count_artists_from_country(artist_country):
-    pass
+def get_country_of_artist(artist):
+    artists_country = reader.load_json_data("Data/ArtistsCountry.json")
+    return artists_country[artist] if artist in artists_country else "Unknown"
+
+
+def count_artists_from_country(artists, country):
+    result = 0
+    for artist in artists:
+        artist_country = get_country_of_artist(artist)
+        if country == artist_country:
+            result += 1
+
+    return result

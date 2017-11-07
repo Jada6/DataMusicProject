@@ -3,6 +3,7 @@ import json
 LANGUAGE_FILE_NAME = "Data/country-by-languages.json"
 POPULATION_FILE_NAME = "Data/country-by-population.json"
 TOP_ARTISTS_DIR = "Data/TopArtists/"
+ARTISTS_COUNTRY_DIR = "Data/ArtistsCountry/"
 
 
 def save_json_data(json_data, file_name):
