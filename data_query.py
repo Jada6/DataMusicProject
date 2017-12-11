@@ -8,9 +8,9 @@ def filter_states_by_population_limit(data, limit):
     return [state for state in data if state['population'] >= limit]
 
 
-def alter_country_by_languages_JSON(states):
-    """ Return new dictionary where every state is key and its value is list of its languages """
-    #states = Reader.load_json_data(Reader.LANGUAGE_FILE_NAME)
+def alter_country_by_languages(states):
+    """ Return new dictionary where key is state
+    and its value is a list of all its languages """
     new_states = {}
 
     for record in states:
@@ -23,45 +23,47 @@ def alter_country_by_languages_JSON(states):
 
 
 def filter_states_without_music(states):
-    return [state for state in states if os.path.exists(reader.TOP_ARTISTS_DIR + state + ".json")]
+    """ Filter those countries which don't have statistics on Last.fm """
+    return [state for state in states
+            if os.path.exists(reader.TOP_ARTISTS_DIR + state + ".json")]
 
 
 def filter_states_without_language(states, language):
     """ Return list of states without the language as official language """
     states = [state['country'] for state in states]
-    states_by_language = alter_country_by_languages_JSON(reader.load_json_data(reader.LANGUAGE_FILE_NAME))
+    states_by_language = alter_country_by_languages(reader.load_json_data(reader.LANGUAGE_FILE_NAME))
 
     return [state for state in states
             if state in states_by_language
             and language not in states_by_language[state]]
 
 
-def list_of_nonengland_artist(nonengland_artists, new_artists):
-    """ Take dictionary of nonengland artists and add new from list of new artists"""
-
-
 def connect_artist_and_country(artist_info, artists_country):
-    """
-    Writes Artist and their country into dictionary
-    :param artist_info:
-    :param artists_country:
-    :return:
-    """
+    """ Write Artist and their country into param artists_country
+    Artist_info - dictionary containing info about artist """
+    state_code = artist_info['country'] if 'country' in artist_info else "Unknown"
+    result = get_state_name(state_code) if state_code is not None else "Unknown"
+    artists_country[artist_info['id']] = result
 
-    artists_country[artist_info['name']] = artist_info['area']['name'] if 'area' in artist_info else "Unknown"
+
+def get_state_name(state_code):
+    """ Return long name of the state, None if the code doesn't exist """
+    # codes - list of dicts with keys Code and Name
+    codes = reader.load_json_data("Data/state_codes.json")
+
+    result = [state["Name"] for state in codes if state["Code"] == state_code]
+    return None if len(result) == 0 else result[0]
 
 
 def alter_top_artists_JSON(states):
+    """ Collect and return all data about top artists into one dictionary:
+    key - state, values - top artists of the state
+    """
     result = {}
     for state in states:
         top_artists = reader.load_json_data(reader.TOP_ARTISTS_DIR + state + ".json")
-        top_artists2 = [artist['name'] for artist in top_artists]
-        result[state] = top_artists2
+        result[state] = top_artists
 
-    '''
-    result[state] = ([artist['name'] for artist in top_artists_of_country])
-    top_artists_of_country.append(top_artist[])
-    '''
     return result
 
 
