@@ -45,6 +45,7 @@ def collect_data():
     Return all the states included in data
     """
     states = get_initial_states()
+    reader.create_dir(reader.TOP_ARTISTS_DIR)
 
     print("Gathering data from Last.fm")
     api_query.save_lastfm_top_artists(states)

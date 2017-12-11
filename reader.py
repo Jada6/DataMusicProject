@@ -7,6 +7,11 @@ TOP_ARTISTS_DIR = "Data/TopArtists/"
 FINAL_DATA = "Data/final-data.json"
 
 
+def create_dir(dir):
+    if not os.path.exists(dir):
+        os.makedirs(dir)
+
+
 def save_json_data(json_data, file_name):
     """ Save data as json file """
     with open(file_name, "w") as json_file:
