@@ -31,7 +31,8 @@ def filter_states_without_music(states):
 def filter_states_without_language(states, language):
     """ Return list of states without the language as official language """
     states = [state['country'] for state in states]
-    states_by_language = alter_country_by_languages(reader.load_json_data(reader.LANGUAGE_FILE_NAME))
+    states_with_langs = reader.load_json_data(reader.LANGUAGE_FILE_NAME)
+    states_by_language = alter_country_by_languages(states_with_langs)
 
     return [state for state in states
             if state in states_by_language

@@ -4,7 +4,7 @@ import os
 LANGUAGE_FILE_NAME = "Data/country-by-languages.json"
 POPULATION_FILE_NAME = "Data/country-by-population.json"
 TOP_ARTISTS_DIR = "Data/TopArtists/"
-FINAL_DATA = "data.json"
+FINAL_DATA = "Data/final-data.json"
 
 
 def save_json_data(json_data, file_name):
